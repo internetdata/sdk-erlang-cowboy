@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.1 - 2026-11-14
+
+### Fixes
+
+- Require internetdata 1.14.1: a 403 can mean the key lacks the ip.lookup scope ([`ccfa7cc`](https://github.com/internetdata/sdk-erlang-cowboy/commit/ccfa7cc4acc52606306afaee44fefc40a6c45a74))
+
 ## 1.0.0 - 2026-11-14
 
 ### Features
