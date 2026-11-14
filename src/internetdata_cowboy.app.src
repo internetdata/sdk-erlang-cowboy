@@ -1,0 +1,14 @@
+{application, internetdata_cowboy,
+ [{description, "Official Cowboy middleware for the InternetData API: look up the visitor "
+                "behind each request, where they are, which network they come from and "
+                "whether it is a VPN, a proxy or a hosting server, and optionally refuse them"},
+  {vsn, "1.0.0"},
+  {registered, []},
+  {applications, [kernel, stdlib, cowboy, internetdata]},
+  {env, []},
+  {modules, []},
+  {licenses, ["MIT"]},
+  {links, [{"GitHub", "https://github.com/internetdata/sdk-erlang-cowboy"},
+           {"Website", "https://internetdata.io"},
+           {"Docs", "https://docs.internetdata.io"}]}
+ ]}.
