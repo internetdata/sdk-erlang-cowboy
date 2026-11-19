@@ -2,6 +2,13 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.2 - 2026-11-19
+
+### Fixes
+
+- Require Cowboy 2.18: older releases carry three security advisories ([`67f72ae`](https://github.com/internetdata/sdk-erlang-cowboy/commit/67f72aec6119c400a881c14cb0c8bef3b3c622e2))
+- Require internetdata 1.17.1 and Cowboy 2.21 ([`2356aa1`](https://github.com/internetdata/sdk-erlang-cowboy/commit/2356aa1160f40543ccda4ac822bc2449a1471eb1))
+
 ## 1.0.1 - 2026-11-14
 
 ### Fixes
