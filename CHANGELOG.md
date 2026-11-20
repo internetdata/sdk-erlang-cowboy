@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.4 - 2026-11-20
+
+### Fixes
+
+- Require internetdata 1.17.3: its docs no longer give the trial a count ([`02935ea`](https://github.com/internetdata/sdk-erlang-cowboy/commit/02935ea4d833471674714a02bce07a18850d67ad))
+
 ## 1.0.3 - 2026-11-19
 
 ### Fixes
