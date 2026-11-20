@@ -2,6 +2,13 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.5 - 2026-11-20
+
+### Fixes
+
+- Require internetdata 1.18.0: it reads a paid domain answer's new members ([`2baa0b8`](https://github.com/internetdata/sdk-erlang-cowboy/commit/2baa0b89c8b4e2173d56be265e156abff382b9ff))
+- Lock internetdata 1.18.0 ([`f5dc4ca`](https://github.com/internetdata/sdk-erlang-cowboy/commit/f5dc4ca56def52a128da31a741a561fb19f6ab44))
+
 ## 1.0.4 - 2026-11-20
 
 ### Fixes
