@@ -2,6 +2,13 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.6 - 2026-11-21
+
+### Fixes
+
+- Require internetdata 1.18.1: its spec pin as republished ([`efb8683`](https://github.com/internetdata/sdk-erlang-cowboy/commit/efb868386879cc0c65da02fe87ae91477e456d3a))
+- Lock internetdata 1.18.1 ([`c373064`](https://github.com/internetdata/sdk-erlang-cowboy/commit/c373064404cdfc8e17e7c8d75ac1f11ff91bec7c))
+
 ## 1.0.5 - 2026-11-20
 
 ### Fixes
