@@ -2,6 +2,17 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.7 - 2026-11-22
+
+### Features
+
+- Show a condition on is_bot, which every plan answers ([`38a7785`](https://github.com/internetdata/sdk-erlang-cowboy/commit/38a778556c7776e52f4181870b1b9f6d6b9e3165))
+
+### Fixes
+
+- Require internetdata 1.19.0: it reads is_bot and a bot's detail ([`d5cbf46`](https://github.com/internetdata/sdk-erlang-cowboy/commit/d5cbf46557286efc35c0d2844b97d8247936171b))
+- Lock internetdata 1.19.0 ([`6a066ac`](https://github.com/internetdata/sdk-erlang-cowboy/commit/6a066ac17bbe6ef84d686996cf0057ab9ab1a7e2))
+
 ## 1.0.6 - 2026-11-21
 
 ### Fixes
