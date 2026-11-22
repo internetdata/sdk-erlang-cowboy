@@ -24,7 +24,7 @@ In a release, also name both in your `.app.src`, or the release boots without th
 
 Requires OTP 27 or newer, and Cowboy 2.21 or newer.
 
-Without an API key a lookup is on Unlimited, the free plan: the country, the network and the company behind the address, Tor, relay, anycast, carrier and satellite space and the service flags, with no daily or monthly cap. Every lookup your app makes comes from your server's one address, though, so a busy site will see bursts refused. A paid plan answers every field, VPN, the proxy flags, hosting, CDN and the city among them; create a key in the [console](https://app.internetdata.io). A free account tries every field.
+Without an API key a lookup is on Unlimited, the free plan: the country, the network and the company behind the address, Tor, relay, anycast, carrier and satellite space, bots and the service flags, with no daily or monthly cap. Every lookup your app makes comes from your server's one address, though, so a busy site will see bursts refused. A paid plan answers every field, VPN, the proxy flags, hosting, CDN and the city among them; create a key in the [console](https://app.internetdata.io). A free account tries every field.
 
 Build the core once, at startup, and name this module in the chain:
 
@@ -67,7 +67,7 @@ internetdata_cowboy:core(#{
 }).
 ```
 
-A condition is written in the shape of a result, keyed by the same names the API uses, and only the members you name are considered, so it can refuse on anything in the answer. The country works on every plan, and so do the first two of these:
+A condition is written in the shape of a result, keyed by the same names the API uses, and only the members you name are considered, so it can refuse on anything in the answer. The country works on every plan, and so do the first three of these:
 
 ```erlang
 %% the network's type
@@ -75,6 +75,9 @@ A condition is written in the shape of a result, keyed by the same names the API
 
 %% anycast and satellite space: a list is OR
 [#{is_anycast => true}, #{is_satellite => true}]
+
+%% automated clients: crawlers, uptime monitors, scanners
+#{is_bot => true}
 
 %% traffic from servers, not people
 [#{is_hosting => true}, #{is_cdn => true}]
@@ -179,7 +182,7 @@ Beyond a few million distinct visitors a day, stop calling the API per request: 
 
 ## Absent is not false
 
-Unlimited, with a key or without one, leaves out `is_vpn`, `is_hosting`, `is_cdn` and the four proxy flags, the detail behind them, and the paid members inside `location`, `asn`, `company` and `abuse`, such as `city`. A key your plan does not include is ABSENT from the result map, which means "not in your plan" rather than "checked, and no".
+Unlimited, with a key or without one, leaves out `is_vpn`, `is_hosting`, `is_cdn` and the four proxy flags, the detail behind them, `bot` (it answers `is_bot`), and the paid members inside `location`, `asn`, `company` and `abuse`, such as `city`. A key your plan does not include is ABSENT from the result map, which means "not in your plan" rather than "checked, and no".
 
 ```erlang
 maps:get(is_vpn, Result, false)        % when you only want the flag

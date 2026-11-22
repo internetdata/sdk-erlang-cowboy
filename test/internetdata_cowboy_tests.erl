@@ -95,6 +95,33 @@ a_blocked_request_never_reaches_the_handler_test_() ->
         stop(Elsewhere)
     end}.
 
+%% A condition on `is_bot' reaches the core through the adapter, and the flag is
+%% attached under its atom: the corpus's verified crawler, served for its public
+%% address, is refused, and an address no bot uses gets through with `is_bot' false.
+a_condition_on_is_bot_refuses_a_bot_and_lets_anyone_else_through_test_() ->
+    {setup, fun start_apps/0, fun stop_apps/1, fun() ->
+        Crawler = lookup_body(<<"paid-bot">>),
+        Ip = maps:get(<<"ip">>, Crawler),
+        Api = api(Crawler, 200),
+        App = app(#{base_url => base_url(Api), ip_selector => fun(_) -> Ip end,
+                    block_condition => #{is_bot => true}}),
+
+        ?assertMatch({403, #{<<"error">> := <<"access denied">>}}, get(App, "/", [])),
+        ?assertEqual([Ip], asked(Api)),
+        stop(App),
+        stop(Api),
+
+        Elsewhere = api(#{}),
+        Passing = app(#{base_url => base_url(Elsewhere), ip_selector => fun(_) -> ?PUBLIC_IP end,
+                        block_condition => #{is_bot => true}}),
+        {200, Passed} = get(Passing, "/", []),
+        ?assertEqual(true, maps:get(<<"attached">>, Passed)),
+        ?assertEqual(false, maps:get(<<"is_bot">>, Passed)),
+        ?assertEqual([?PUBLIC_IP], asked(Elsewhere)),
+        stop(Passing),
+        stop(Elsewhere)
+    end}.
+
 on_blocked_replaces_the_refusal_test_() ->
     {setup, fun start_apps/0, fun stop_apps/1, fun() ->
         Api = api(located(<<"IR">>)),
@@ -345,6 +372,7 @@ init(Req, State) ->
         <<"ip">> => at(Found, ip),
         <<"country">> => country(Found),
         <<"is_vpn">> => flag(Found, is_vpn),
+        <<"is_bot">> => flag(Found, is_bot),
         <<"is_bogon">> => flag(Found, is_bogon),
         <<"error">> => error_kind(Found)
     }),
@@ -444,9 +472,12 @@ authorizations({_Name, _Port, Collector}) ->
 
 %% The corpus's Unlimited answer, Unlimited's members with nothing flagged.
 unlimited() ->
+    lookup_body(<<"unlimited-answer">>).
+
+%% The body of the corpus's lookup case of that name.
+lookup_body(Name) ->
     {ok, Raw} = file:read_file(testdata_path()),
-    [Body] = [B || #{<<"name">> := <<"unlimited-answer">>, <<"body">> := B}
-                   <- maps:get(<<"lookup">>, json:decode(Raw))],
+    [Body] = [B || #{<<"name">> := N, <<"body">> := B} <- maps:get(<<"lookup">>, json:decode(Raw)), N =:= Name],
     Body.
 
 located(Country) ->
