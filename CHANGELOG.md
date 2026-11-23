@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.8 - 2026-11-23
+
+### Fixes
+
+- Require internetdata 1.19.1: it refuses a lookup answer without is_bot ([`8227518`](https://github.com/internetdata/sdk-erlang-cowboy/commit/8227518e0f138c65a3e07a1503277af1b2dde07a))
+
 ## 1.0.7 - 2026-11-22
 
 ### Features
