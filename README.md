@@ -92,7 +92,7 @@ A condition is written in the shape of a result, keyed by the same names the API
 #{resproxy => #{hits => #{gte => 5}}}
 ```
 
-Values are matched by equality, strings without regard to case. A list means any-of. A map of `gte`/`gt`/`lte`/`lt` bounds a number and combines into a range; every bound you give must hold. Members set to `false`, `null` or `undefined` are ignored, so a condition states the signals you act on; one that constrains nothing would match every request, and is refused when the core is built rather than silently blocking all your traffic.
+Values are matched by equality, strings without regard to case. A list means any-of. Against a member the answer holds as a list (`web`'s rows, `pubproxy.protocols`), a value matches when any one element does, and a map must match one element whole: `#{web => #{port => 443}}`. A map of `gte`/`gt`/`lte`/`lt` bounds a number and combines into a range; every bound you give must hold. Members set to `false`, `null` or `undefined` are ignored, so a condition states the signals you act on; one that constrains nothing would match every request, and is refused when the core is built rather than silently blocking all your traffic.
 
 Atom and binary keys both work, so a condition can come straight out of `json:decode/1` on your app's config file:
 
