@@ -2,6 +2,17 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.1.0 - 2026-11-25
+
+### Features
+
+- Require internetdata 1.21.0: allow_bots lets a verified crawler through ([`872bcf8`](https://github.com/internetdata/sdk-erlang-cowboy/commit/872bcf87fdf5477a2d7d8438bd242825ab8da251))
+- README: let verified crawlers through with allow_bots ([`7b9a01f`](https://github.com/internetdata/sdk-erlang-cowboy/commit/7b9a01f776c45cf0710eb4f2f37de23566beece8))
+
+### Fixes
+
+- Test that each corpus case the condition lets through reaches the handler with its answer ([`c1befa1`](https://github.com/internetdata/sdk-erlang-cowboy/commit/c1befa162452079aaf04bed7878ccc44ddf0df39))
+
 ## 1.0.9 - 2026-11-24
 
 ### Features
