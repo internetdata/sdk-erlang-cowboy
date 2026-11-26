@@ -105,7 +105,8 @@ a_blocked_request_never_reaches_the_handler_test_() ->
 
 %% A condition on `is_bot' reaches the core through the adapter, and the flag is
 %% attached under its atom: the corpus's verified crawler, served for its public
-%% address, is refused, and an address no bot uses gets through with `is_bot' false.
+%% address, is refused, and an address no bot uses gets through on Unlimited's answer,
+%% which carries no `is_bot', so it reads absent rather than false.
 a_condition_on_is_bot_refuses_a_bot_and_lets_anyone_else_through_test_() ->
     {setup, fun start_apps/0, fun stop_apps/1, fun() ->
         Crawler = lookup_body(<<"paid-bot">>),
@@ -124,7 +125,7 @@ a_condition_on_is_bot_refuses_a_bot_and_lets_anyone_else_through_test_() ->
                         block_condition => #{is_bot => true}}),
         {200, Passed} = get(Passing, "/", []),
         ?assertEqual(true, maps:get(<<"attached">>, Passed)),
-        ?assertEqual(false, maps:get(<<"is_bot">>, Passed)),
+        ?assertEqual(null, maps:get(<<"is_bot">>, Passed)),
         ?assertEqual([?PUBLIC_IP], asked(Elsewhere)),
         stop(Passing),
         stop(Elsewhere)
