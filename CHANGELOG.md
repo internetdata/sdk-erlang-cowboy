@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.1.1 - 2026-11-26
+
+### Features
+
+- Require internetdata 1.22.0: a keyless answer without the bot, carrier, satellite and service flags is read ([`5d80bd7`](https://github.com/internetdata/sdk-erlang-cowboy/commit/5d80bd7116e36ebc7c2fbcf5d5aa98fb25075177))
+
 ## 1.1.0 - 2026-11-25
 
 ### Features
