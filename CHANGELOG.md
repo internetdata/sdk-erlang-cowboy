@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.1.2 - 2026-11-27
+
+### Features
+
+- Require internetdata 1.23.0: a keyless answer without the AS's type is read ([`371177a`](https://github.com/internetdata/sdk-erlang-cowboy/commit/371177a9957fe7a636a01133e88d9123dab05a55))
+
 ## 1.1.1 - 2026-11-26
 
 ### Features
