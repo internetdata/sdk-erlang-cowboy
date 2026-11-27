@@ -67,7 +67,7 @@ internetdata_cowboy:core(#{
 }).
 ```
 
-A condition is written in the shape of a result, keyed by the same names the API uses, and only the members you name are considered, so it can refuse on anything in the answer. The country works on every plan, and so do the first of these and `is_anycast` in the second; `is_satellite` and `is_bot` need a paid plan or the trial:
+A condition is written in the shape of a result, keyed by the same names the API uses, and only the members you name are considered, so it can refuse on anything in the answer. The country works on every plan, and so does `is_anycast` in the second; the first, `is_satellite` and `is_bot` need a paid plan or the trial:
 
 ```erlang
 %% the network's type
@@ -202,7 +202,7 @@ Beyond a few million distinct visitors a day, stop calling the API per request: 
 
 Unlimited, with a key or without one, leaves out `is_vpn`, `is_hosting`, `is_cdn`, the four proxy flags, `is_bot`, `is_carrier`, `is_satellite`, `is_ssh`, `is_smtp`, `is_web`, `is_dns_resolver` and `is_bittorrent`, the detail behind them, and the paid members inside `location`, `asn`, `company` and `abuse`, such as `city`. A key your plan does not include is ABSENT from the result map, which means "not in your plan" rather than "checked, and no".
 
-One exception, until the next major release of the `internetdata` library: `is_carrier`, `is_satellite`, `is_ssh`, `is_smtp`, `is_web`, `is_dns_resolver` and `is_bittorrent` are always in the result map, and read `false` where the plan does not answer them. A condition on one still counts as naming a member your plan does not serve, because it is judged on what the API sent.
+One exception, until the next major release of the `internetdata` library: `is_carrier`, `is_satellite`, `is_ssh`, `is_smtp`, `is_web`, `is_dns_resolver` and `is_bittorrent` are always in the result map, and read `false` where the plan does not answer them, and `type` inside `asn` reads an empty binary. A condition on one still counts as naming a member your plan does not serve, because it is judged on what the API sent.
 
 ```erlang
 maps:get(is_vpn, Result, false)        % when you only want the flag
