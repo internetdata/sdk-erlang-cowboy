@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.1.3 - 2026-11-28
+
+### Features
+
+- Require internetdata 1.24.0: allow_bots sends only a crawler's User-Agent, at most four an address ([`d2d9f68`](https://github.com/internetdata/sdk-erlang-cowboy/commit/d2d9f68d6f17026dd8261a5801e332193a2ddf5d))
+
 ## 1.1.2 - 2026-11-27
 
 ### Features
