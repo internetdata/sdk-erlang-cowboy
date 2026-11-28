@@ -388,6 +388,42 @@ allow_bots_lets_a_verified_crawler_through_for_a_public_peer_test_() ->
         stop(Api)
     end}.
 
+%% A visitor inventing an agent a request spends at most four lookups, through the
+%% adapter: from a PUBLIC peer with five crawler agents and a stub answering
+%% `verified' to any agent, four reach the API, the fifth arrives bare and is
+%% refused, a known one is sent again, and another address has its own four. The
+%% client is built without a cache, or a known agent would never reach the stub.
+allow_bots_sends_at_most_four_crawler_agents_an_address_test_() ->
+    {setup, fun start_apps/0, fun stop_apps/1, fun() ->
+        Api = verdict_api(verified_any),
+        {ok, Configured} = internetdata_cowboy:core(#{
+            client => internetdata:new(#{api_key => <<"k">>, base_url => base_url(Api), cache => false,
+                                         retries => 0}),
+            allow_bots => true,
+            block_condition => #{is_vpn => true},
+            on_blocked => fun(Req, _Found) -> Req#{refused => true} end,
+            on_warn => fun(_) -> ok end
+        }),
+        Agent = fun(N) ->
+            iolist_to_binary(io_lib:format("Mozilla/5.0 (compatible; Examplebot/~b.0)", [N]))
+        end,
+        Run = fun(Peer, N) ->
+            Req = #{peer => {Peer, 40000}, headers => #{<<"user-agent">> => Agent(N)}},
+            internetdata_cowboy:execute(Req, #{internetdata => Configured})
+        end,
+        First = {66, 249, 66, 1},
+        Second = {66, 249, 66, 2},
+
+        [?assertMatch({ok, _, _}, Run(First, N)) || N <- [1, 2, 3, 4]],
+        ?assertMatch({stop, #{refused := true}}, Run(First, 5)),
+        ?assertMatch({ok, _, _}, Run(First, 1)),
+        ?assertMatch({ok, _, _}, Run(Second, 5)),
+        ?assertEqual([Agent(1), Agent(2), Agent(3), Agent(4), none, Agent(1), Agent(5)],
+                     [A || {agent, A} <- seen(asked_by(Api))]),
+        internetdata_middleware:close(maps:get(core, Configured)),
+        stop(Api)
+    end}.
+
 %% Named in the chain but never configured: every request would otherwise crash
 %% on a missing env key, which is the opposite of the fail-open this middleware
 %% promises everywhere else.
@@ -402,14 +438,16 @@ an_unconfigured_middleware_lets_the_request_through_test_() ->
 %%% ------------------------------------------------------------------- the app
 
 %% A handler that reports back what the middleware attached.
-init(Req, {verdicts, Asked} = State) ->
+init(Req, {Kind, Asked} = State) when Kind =:= verdicts; Kind =:= verified_any ->
     Address = iolist_to_binary(lists:join($/, cowboy_req:path_info(Req))),
     Agent = proplists:get_value(<<"user_agent">>, cowboy_req:parse_qs(Req), none),
     Asked ! {agent, Agent},
-    Verdict = case Agent of
-        none -> #{};
-        ?GOOGLEBOT -> #{<<"user_agent">> => #{<<"agent">> => <<"Googlebot">>, <<"kind">> => <<"bot">>,
-                                              <<"verdict">> => <<"verified">>}};
+    Verdict = case {Kind, Agent} of
+        {_, none} -> #{};
+        {verified_any, _} -> #{<<"user_agent">> => #{<<"agent">> => <<"Examplebot">>, <<"kind">> => <<"bot">>,
+                                                     <<"verdict">> => <<"verified">>}};
+        {_, ?GOOGLEBOT} -> #{<<"user_agent">> => #{<<"agent">> => <<"Googlebot">>, <<"kind">> => <<"bot">>,
+                                                   <<"verdict">> => <<"verified">>}};
         _ -> #{<<"user_agent">> => #{<<"agent">> => <<"Bingbot">>, <<"kind">> => <<"bot">>,
                                      <<"verdict">> => <<"spoofed">>}}
     end,
@@ -522,9 +560,12 @@ api(Body, Status) ->
 %% Answers every address as a VPN, with the verdict for the agent it was sent:
 %% `verified' for Googlebot's, `spoofed' for any other, none when none came.
 verdict_api() ->
+    verdict_api(verdicts).
+
+verdict_api(Kind) ->
     Asked = collector(),
     Name = {api, make_ref()},
-    Dispatch = cowboy_router:compile([{'_', [{"/[...]", ?MODULE, {verdicts, Asked}}]}]),
+    Dispatch = cowboy_router:compile([{'_', [{"/[...]", ?MODULE, {Kind, Asked}}]}]),
     {ok, _} = cowboy:start_clear(Name, [{port, 0}], #{env => #{dispatch => Dispatch}}),
     {Name, ranch:get_port(Name), Asked}.
 
